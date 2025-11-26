@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
+    // StateFlow
     private val _popularMovies = MutableStateFlow(emptyList<Movie>())
     val popularMovies: StateFlow<List<Movie>> = _popularMovies
 
@@ -28,7 +29,9 @@ class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel()
                     _error.value = "An exception occurred: ${exception.message}"
                 }
                 .collect { movies ->
-                    _popularMovies.value = movies
+                    // 🔥 Sorting descending by popularity
+                    val sortedMovies = movies.sortedByDescending { it.popularity }
+                    _popularMovies.value = sortedMovies
                 }
         }
     }
