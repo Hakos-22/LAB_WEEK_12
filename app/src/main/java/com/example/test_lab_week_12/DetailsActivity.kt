@@ -1,44 +1,32 @@
 package com.example.test_lab_week_12
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.test_lab_week_12.databinding.ActivityDetailsBinding
 
 class DetailsActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_TITLE = "title"
-        const val EXTRA_RELEASE = "release"
-        const val EXTRA_OVERVIEW = "overview"
-        const val EXTRA_POSTER = "poster"
-        const val IMAGE_URL = "https://image.tmdb.org/t/p/w185/"
+        const val EXTRA_TITLE = "extra_title"
+        const val EXTRA_RELEASE = "extra_release"
+        const val EXTRA_OVERVIEW = "extra_overview"
+        const val EXTRA_POSTER = "extra_poster"
     }
+
+    private lateinit var binding: ActivityDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val titleText: TextView = findViewById(R.id.title_text)
-        val releaseText: TextView = findViewById(R.id.release_text)
-        val overviewText: TextView = findViewById(R.id.overview_text)
-        val poster: ImageView = findViewById(R.id.movie_poster)
+        binding.titleText.text = intent.getStringExtra(EXTRA_TITLE)
+        binding.releaseText.text = intent.getStringExtra(EXTRA_RELEASE)
+        binding.overviewText.text = intent.getStringExtra(EXTRA_OVERVIEW)
 
-        val extras = intent.extras
-
-        titleText.text = extras?.getString(EXTRA_TITLE).orEmpty()
-        releaseText.text = extras?.getString(EXTRA_RELEASE).orEmpty().take(4)
-
-        overviewText.text =
-            getString(R.string.movie_overview, extras?.getString(EXTRA_OVERVIEW).orEmpty())
-
-        val posterPath = extras?.getString(EXTRA_POSTER).orEmpty()
-        Glide.with(this@DetailsActivity)
-            .load("$IMAGE_URL$posterPath")
-            .placeholder(R.mipmap.ic_launcher)
-            .fitCenter()
-            .into(poster)
-
+        Glide.with(this)
+            .load("https://image.tmdb.org/t/p/w500" + intent.getStringExtra(EXTRA_POSTER))
+            .into(binding.moviePoster)
     }
 }

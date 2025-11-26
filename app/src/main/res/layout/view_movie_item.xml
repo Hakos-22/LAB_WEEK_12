@@ -32,4 +32,17 @@
         app:layout_constraintTop_toBottomOf="@id/movie_poster"
         tools:text="Movie" />
 
+    <TextView
+        android:id="@+id/movie_release_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="1"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/movie_title"
+        tools:text="2023-10-12" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

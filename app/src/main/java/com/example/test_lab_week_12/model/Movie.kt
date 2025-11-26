@@ -25,4 +25,3 @@ data class Movie(
     @field:Json(name = "vote_count")
     val voteCount: Int = 0
 )
-
