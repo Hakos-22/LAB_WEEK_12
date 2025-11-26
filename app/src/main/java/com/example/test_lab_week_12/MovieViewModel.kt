@@ -1,16 +1,21 @@
 package com.example.test_lab_week_12.api
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.test_lab_week_12.model.Movie
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
+class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
-    val popularMovies: LiveData<List<Movie>> get() = repository.movies
-    val error: LiveData<String> get() = repository.error
+    private val _popularMovies = MutableStateFlow(emptyList<Movie>())
+    val popularMovies: StateFlow<List<Movie>> = _popularMovies
+
+    private val _error = MutableStateFlow("")
+    val error: StateFlow<String> = _error
 
     init {
         fetchPopularMovies()
@@ -18,7 +23,13 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
     private fun fetchPopularMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchMovies()
+            movieRepository.fetchMovies()
+                .catch { exception ->
+                    _error.value = "An exception occurred: ${exception.message}"
+                }
+                .collect { movies ->
+                    _popularMovies.value = movies
+                }
         }
     }
 }
